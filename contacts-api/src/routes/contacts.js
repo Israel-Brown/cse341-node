@@ -1,58 +1,62 @@
 const express = require('express');
 const router = express.Router();
-const Contact = require('../models/contact');
+const Contact = require('../models/Contact'); // Contact model (defined below)
 
-// GET all contacts
+// GET: Retrieve all contacts
 router.get('/', async (req, res) => {
   try {
     const contacts = await Contact.find();
     res.status(200).json(contacts);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    res.status(500).json({ message: 'Error retrieving contacts', error: err });
   }
 });
 
-// GET contact by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const contact = await Contact.findById(req.params.id);
-    if (!contact) return res.status(404).json({ message: 'Contact not found' });
-    res.status(200).json(contact);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// POST new contact
+// POST: Create a new contact
 router.post('/', async (req, res) => {
+  const { firstName, lastName, email, favoriteColor, birthday } = req.body;
+
+  if (!firstName || !lastName || !email || !favoriteColor || !birthday) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  const newContact = new Contact({ firstName, lastName, email, favoriteColor, birthday });
   try {
-    const contact = new Contact(req.body);
-    await contact.save();
-    res.status(201).json({ id: contact._id });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const savedContact = await newContact.save();
+    res.status(201).json({ id: savedContact._id, message: 'Contact created successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error creating contact', error: err });
   }
 });
 
-// PUT update contact
+// PUT: Update an existing contact
 router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
   try {
-    const contact = await Contact.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!contact) return res.status(404).json({ message: 'Contact not found' });
-    res.status(200).json(contact);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const updatedContact = await Contact.findByIdAndUpdate(id, updates, { new: true });
+    if (!updatedContact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+    res.status(200).json({ message: 'Contact updated successfully', updatedContact });
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating contact', error: err });
   }
 });
 
-// DELETE contact
+// DELETE: Delete a contact
 router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const contact = await Contact.findByIdAndDelete(req.params.id);
-    if (!contact) return res.status(404).json({ message: 'Contact not found' });
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const deletedContact = await Contact.findByIdAndDelete(id);
+    if (!deletedContact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+    res.status(200).json({ message: 'Contact deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting contact', error: err });
   }
 });
 
