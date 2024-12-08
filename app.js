@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const contactRoutes = require('./routes/contacts');
+const contactRoutes = require('./src/routes/contacts');
 const setupSwagger = require('./swagger');
 
 const app = express();
