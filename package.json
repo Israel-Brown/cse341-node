@@ -4,7 +4,8 @@
   "description": "My First Project",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -17,9 +18,18 @@
   },
   "homepage": "https://github.com/Israel-Brown/cse341-node#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.4",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "swagger-ui-express": "^5.0.1"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }
