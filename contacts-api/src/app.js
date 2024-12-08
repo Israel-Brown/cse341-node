@@ -13,3 +13,4 @@ app.use('./routes/contacts', contactRoutes);
 setupSwagger(app);
 
 module.exports = app;
+
